@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Database } from "@/lib/api";
 import { MdStorage, MdAdd, MdMoreVert, MdDelete } from "react-icons/md";
 
@@ -29,7 +28,7 @@ export default function DatabasePanel({
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <Image 
+            <img 
               src="/logo.png" 
               alt="Soltix Logo" 
               width={40} 
