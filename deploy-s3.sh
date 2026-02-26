@@ -18,20 +18,25 @@ if [ ! -d "./out" ] || [ -z "$(ls -A ./out)" ]; then
   exit 1
 fi
 
+# Remove RSC payload files (not needed for static hosting)
+echo "==> Cleaning RSC payload files..."
+find ./out -name '__next.*' -type f -delete
+find ./out -name '*.txt' -not -name 'robots.txt' -type f -delete
+
 echo "==> Uploading to s3://${S3_BUCKET}..."
+# Static assets with long cache
 aws s3 sync ./out "s3://${S3_BUCKET}" \
   --delete \
   --region "${AWS_REGION}" \
   --cache-control "public, max-age=31536000, immutable" \
-  --exclude "*.html" \
-  --exclude "404.html"
+  --exclude "*.html"
 
-# HTML files with shorter cache
+# HTML files with no cache
 aws s3 sync ./out "s3://${S3_BUCKET}" \
   --region "${AWS_REGION}" \
   --cache-control "public, max-age=0, must-revalidate" \
-  --include "*.html" \
   --exclude "*" \
+  --include "*.html" \
   --content-type "text/html"
 
 # Invalidate CloudFront cache if distribution ID is set
